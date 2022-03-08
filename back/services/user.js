@@ -48,10 +48,9 @@ module.exports = (app) => {
 
   // Insert the new User
   function insertUser(body, session) {
-    return new User({
+    return User.create({
       ...body
-    }, session)
-    .save(session)
+    })
     .then((data) => {
       return data;
     })

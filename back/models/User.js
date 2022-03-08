@@ -4,10 +4,6 @@ module.exports = (app) => {
   const bcrypt = require('bcrypt');
 
   const UserSchema = new mongoose.Schema({
-    // 	the user's id, unique
-    _id: {
-      type: Number
-    },
     // the user's firstname, not unique across the platform
     firstname: {
       type: String,
