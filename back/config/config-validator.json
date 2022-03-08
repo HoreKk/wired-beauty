@@ -1,0 +1,149 @@
+{
+  "type": "object",
+  "properties": {
+    "host": {
+      "type": "string",
+      "description": "API URL",
+      "default": "http://localhost"
+    },
+    "application": {
+      "type": "string",
+      "description": "Lien vers l'application"
+    },
+    "port": {
+      "type": "string",
+      "description": "API port",
+      "default": "6900"
+    },
+    "cors": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "string",
+          "description": "Access-Control-Allow-Origin header",
+          "default": "*"
+        }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "object",
+          "properties": {
+            "salt": {
+              "type": "string",
+              "description": "JWT token key"
+            },
+            "lifeTime": {
+              "type": "string",
+              "description": "JWT token lifetime",
+              "default": "30days"
+            }
+          }
+        },
+        "refreshToken": {
+          "type": "object",
+          "properties": {
+            "expiration": {
+              "type": "string",
+              "description": "Refresh token lifetime"
+            },
+            "saltRounds": {
+              "type": "number",
+              "description": "Count of salt rounds"
+            }
+          },
+          "required": [
+            "expiration"
+          ]
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "saltRounds": {
+              "type": "number",
+              "description": "Count of salt rounds"
+            }
+          },
+          "required": [
+            "saltRounds"
+          ]
+        },
+        "required": [
+          "token",
+          "refresToken",
+          "user"
+        ]
+      }
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Database name"
+        },
+        "host": {
+          "type": "string",
+          "description": "Database host"
+        },
+        "port": {
+          "type": "string",
+          "description": "Database port"
+        },
+        "user": {
+          "type": "string",
+          "description": "Database user"
+        },
+        "password": {
+          "type": "string",
+          "description": "Database password"
+        },
+        "option": {
+          "type": "string",
+          "description": "Database options"
+        }
+      }
+    },
+    "smtpConfig": {
+      "type": "object",
+      "properties": {
+        "host": {
+          "type": "string",
+          "description": "SMTP server host"
+        },
+        "port": {
+          "type": "string",
+          "description": "SMTP server port"
+        },
+        "secure": {
+          "type": "boolean",
+          "description": "Toggle TLS for SMTP connections"
+        },
+        "from": {
+          "type": "string",
+          "description": "App's mail address"
+        },
+        "sender": {
+          "type": "string",
+          "description": "Email sender address"
+        }
+      }
+    },
+    "maxBodySize": {
+      "type": "string",
+      "description": "Max body size for user logos (as base 64)",
+      "default": "2mb"
+    }
+  },
+  "required": [ 
+    "host",
+    "port",
+    "cors",
+    "auth",
+    "database",
+    "smtpConfig",
+    "maxBodySize"
+   ] 
+}

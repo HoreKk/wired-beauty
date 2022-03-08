@@ -1,4 +1,4 @@
-FROM node:13.0-alpine
+FROM node:alpine
 
 ENV NODE_ENV=development
 
@@ -6,12 +6,10 @@ WORKDIR /app
 
 EXPOSE 4000
 
-COPY package.json ./
+COPY . ./
 
-RUN npm install
+RUN npm i
 
 ENV HOST 0.0.0.0
-
-COPY . .
 
 CMD ["npm", "run", "dev"]
