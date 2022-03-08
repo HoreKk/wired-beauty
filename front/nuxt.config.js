@@ -40,7 +40,11 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/content
     '@nuxt/content',
+    '@nuxtjs/auth-next',
   ],
+  auth: {
+    // options for auth-next
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
