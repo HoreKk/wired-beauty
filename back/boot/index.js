@@ -9,7 +9,7 @@ module.exports = (app) => {
     app.transporter = await require('./sendmail')(app);
     app.db = await require('./database')(app);
     
-    server.listen(port, '0.0.0.0', () => {
+    server.listen(port, host, () => {
       app.logger.info(`Running in ${process.env.NODE_ENV} mode`);
       app.logger.info(`Api listening on http://${host}:${app.config.port}`);
     });
