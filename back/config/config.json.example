@@ -1,0 +1,39 @@
+{
+  "host": "",
+  "port": "8080",
+  "cors": {
+    "origin": "*"
+  },
+  "database": {
+    "name": "",
+    "host": "",
+    "port": "",
+    "user": "",
+    "password": "",
+    "option": {
+      "force": false,
+      "loggin": false
+    },
+    "model": {
+      "freezeTableName": true
+    }
+  },
+  "auth": {
+    "token": {
+      "salt": "UhojWlobnPDD2krl",
+      "lifeTime": "30min"
+    },
+    "refreshToken": {
+      "saltRounds": 10
+    },
+    "users": {
+      "saltRounds": 10
+    }
+  },
+  "smtpConfig": {
+    "host": "",
+    "port": "",
+    "secure": false
+  },
+  "maxBodySize": "2mb"
+}
