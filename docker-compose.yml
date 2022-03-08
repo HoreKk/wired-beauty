@@ -1,0 +1,29 @@
+services:
+  frontend:
+    build: ./front
+    depends_on:
+      - backend
+    volumes:
+      - ./front:/app
+      - /front/node_modules/
+    ports:
+      - ${PORT_FRONT}:3000
+  backend:
+    build: ./back
+    depends_on:
+      - mongo
+    volumes:
+      - ./back:/app
+      - /back/node_modules/
+    ports:
+      - ${PORT_BACK}:4000
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/data/db
+
+volumes:
+  mongodb:
