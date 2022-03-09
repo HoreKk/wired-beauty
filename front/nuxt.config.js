@@ -4,6 +4,13 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap',
+      },
+    ],
     title: 'front',
     htmlAttrs: {
       lang: 'en',
@@ -88,5 +95,12 @@ export default {
   content: {},
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    postcss: {
+      plugins: {
+        tailwindcss: {},
+        autoprefixer: {},
+      },
+    },
+  },
 }

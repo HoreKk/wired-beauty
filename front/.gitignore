@@ -88,3 +88,10 @@ sw.*
 
 # Vim swap files
 *.swp
+
+.env
+node_modules/
+package-lock.json
+config-dev.json
+config.json
+.vscode
