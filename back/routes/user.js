@@ -4,7 +4,23 @@ module.exports = (app) => {
   const { ensureAuthenticated } = app.middlewares;
   const router = new Router();
 
-  const { findUserById, updateUser } = app.action.user;
+  const { findUserById, findUsers, countUsers, updateUser } = app.action.user;
+  
+  
+  // Count Users
+  router.get('/count',
+  countUsers
+  )
+  
+  // Find Users with pagination
+  router.get('/',
+  findUsers
+  )
+  
+  // Update User by id
+  router.put('/update/:id',
+  updateUser
+  );
   
   // Find User by id
   router.get('/:id',
@@ -12,10 +28,5 @@ module.exports = (app) => {
     findUserById
   )
   
-  // Update User by id
-  router.put('/update/:id',
-    updateUser
-  );
-
   return router;
 }

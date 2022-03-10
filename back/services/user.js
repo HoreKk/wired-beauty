@@ -1,6 +1,8 @@
 module.exports = (app) => {
   const { User } = app.models;
   return {
+    count,
+    findWithPagination,
     findById,
     findByEmail,
     insertUser,
@@ -8,6 +10,42 @@ module.exports = (app) => {
     isRefreshTokenValid,
     updateRefreshToken
   };
+
+  // Count Users
+  function count() {
+    return User.countDocuments().exec()
+    .then(result => {
+      return result;
+    })
+    .catch((error) => {
+      return app.helpers.reject({
+        code: 401,
+        type: 's002',
+        fields: [],
+        message: 'userNotFound',
+        display: 'error.userNotFound',
+        error
+      });
+    });
+  }
+
+  // Find User by _id
+  function findWithPagination(page, numberPerPage) {
+    return User.find().skip((page - 1) * numberPerPage).limit(numberPerPage).exec()
+    .then(result => {
+      return result;
+    })
+    .catch((error) => {
+      return app.helpers.reject({
+        code: 401,
+        type: 's002',
+        fields: [],
+        message: 'userNotFound',
+        display: 'error.userNotFound',
+        error
+      });
+    });
+  }
 
   // Find User by email
   function findByEmail(email, show = 0) {
