@@ -9,16 +9,19 @@ module.exports = (app) => {
   
   // Count Users
   router.get('/count',
-  countUsers
+    ensureAuthenticated,
+    countUsers
   )
   
   // Find Users with pagination
   router.get('/',
-  findUsers
+    ensureAuthenticated,  
+    findUsers
   )
   
   // Update User by id
   router.put('/update/:id',
+    ensureAuthenticated,
     updateUser
   );
   

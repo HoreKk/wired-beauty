@@ -84,7 +84,7 @@
               <button v-for="page in pageArray" :key="page" @click="pagination.page = page" :class="[page == pagination.page ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50']" class="relative cursor-pointer inline-flex items-center px-4 py-2 border text-sm font-medium"> 
                 {{ page }}
               </button>
-              <button @click="++pagination.page" :disabled="pagination.page === pageArray.length || pageArray.length" class="relative not-disabled:cursor-pointer inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-75 disabled:bg-gray-100">
+              <button @click="++pagination.page" :disabled="pagination.page === pageArray.length || pageArray.length === 0" class="relative not-disabled:cursor-pointer inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-75 disabled:bg-gray-100">
                 <font-awesome-icon :icon="['fa', 'chevron-right']" />
               </button>
             </nav>
@@ -114,7 +114,7 @@ export default {
   },
   computed: {
     pageArray() { 
-      return [...Array(Math.round(this.pagination.count / this.pagination.numberPerPage) || 1).keys()].map(x => ++x)
+      return [...Array(Math.ceil(this.pagination.count / this.pagination.numberPerPage)).keys()].map(x => ++x)
     }
   },
   watch: {
@@ -138,6 +138,7 @@ export default {
     async deleteUser(id) {
       await this.$axios.delete(`/user/${id}`)
       await this.fetchUsers()
+      this.pagination.page = 1
     },
   },
 }
