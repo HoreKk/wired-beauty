@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       navigation: [
-        { name: 'Dashboard', link: '/dashboard' },
+        { name: 'Dashboard', link: '/dashboard/stats' },
         { name: 'Users', link: '/dashboard/users' },
         { name: 'Studies', link: '/dashboard/studies' },
       ],
@@ -58,7 +58,7 @@ export default {
 
 <style>
 
-.nuxt-link-exact-active {
+.nuxt-link-active {
   @apply bg-gray-100 text-gray-900;
 }
 

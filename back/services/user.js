@@ -1,13 +1,52 @@
 module.exports = (app) => {
   const { User } = app.models;
   return {
+    count,
+    findWithPagination,
     findById,
     findByEmail,
     insertUser,
     updateUserService,
     isRefreshTokenValid,
-    updateRefreshToken
+    updateRefreshToken,
+    deleteById,
   };
+
+  // Count Users
+  function count() {
+    return User.countDocuments().exec()
+    .then(result => {
+      return result;
+    })
+    .catch((error) => {
+      return app.helpers.reject({
+        code: 401,
+        type: 's002',
+        fields: [],
+        message: 'userNotFound',
+        display: 'error.userNotFound',
+        error
+      });
+    });
+  }
+
+  // Find User by _id
+  function findWithPagination(page, numberPerPage) {
+    return User.find().skip((page - 1) * numberPerPage).limit(numberPerPage).exec()
+    .then(result => {
+      return result;
+    })
+    .catch((error) => {
+      return app.helpers.reject({
+        code: 401,
+        type: 's002',
+        fields: [],
+        message: 'userNotFound',
+        display: 'error.userNotFound',
+        error
+      });
+    });
+  }
 
   // Find User by email
   function findByEmail(email, show = 0) {
@@ -48,10 +87,12 @@ module.exports = (app) => {
 
   // Insert the new User
   function insertUser(body, session) {
+    console.log(body)
     return User.create({
       ...body
     })
     .then((data) => {
+      console.log(data)
       return data;
     })
     .catch((error) => {
@@ -135,6 +176,22 @@ module.exports = (app) => {
       });
     })
     .then(() => findByEmail(user.email));
+  }
+
+  // Delete User by _id
+  function deleteById(id) {
+    return User.deleteOne({ _id: id }).exec()
+    .then(app.helpers.ensureOne)
+    .catch((error) => {
+      return app.helpers.reject({
+        code: 400,
+        type: 's002',
+        fields: [],
+        message: 'userDeleteError',
+        display: 'error.userDeleteError',
+        error
+      });
+    });
   }
 
 }

@@ -20,7 +20,9 @@ export default {
     ],
   },
 
-  css: [],
+  css: [
+    '@/node_modules/@braid/vue-formulate/themes/snow/snow.scss',
+  ],
 
   plugins: [
     '~/plugins/components',
@@ -32,6 +34,8 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
     '@nuxtjs/fontawesome',
+    '@nuxtjs/style-resources',
+    '@braid/vue-formulate/nuxt',
   ],
   modules: [
     // https://go.nuxtjs.dev/axios
