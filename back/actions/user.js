@@ -1,10 +1,11 @@
 module.exports = (app) => {
-  const { findById, findWithPagination, count, updateUserService } = app.services.user;
+  const { findById, findWithPagination, deleteById, count, updateUserService } = app.services.user;
   return {
     findUserById,
     findUsers,
     countUsers,
-    updateUser
+    updateUser,
+    deleteUserById,
   }
 
   // Count Users
@@ -98,5 +99,18 @@ module.exports = (app) => {
         err: error
       });
     }
+  }
+
+  // Delete User by Id
+  async function deleteUserById(req, res) {
+    const { id } = req.params;
+    return deleteById(id)
+    .then(app.helpers.ensureOne)
+    .then((user) => {
+      res.success(user);
+    })
+    .catch((error) => {
+      res.error(error);
+    });
   }
 }

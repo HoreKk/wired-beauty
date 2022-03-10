@@ -8,7 +8,8 @@ module.exports = (app) => {
     insertUser,
     updateUserService,
     isRefreshTokenValid,
-    updateRefreshToken
+    updateRefreshToken,
+    deleteById,
   };
 
   // Count Users
@@ -86,10 +87,12 @@ module.exports = (app) => {
 
   // Insert the new User
   function insertUser(body, session) {
+    console.log(body)
     return User.create({
       ...body
     })
     .then((data) => {
+      console.log(data)
       return data;
     })
     .catch((error) => {
@@ -173,6 +176,22 @@ module.exports = (app) => {
       });
     })
     .then(() => findByEmail(user.email));
+  }
+
+  // Delete User by _id
+  function deleteById(id) {
+    return User.deleteOne({ _id: id }).exec()
+    .then(app.helpers.ensureOne)
+    .catch((error) => {
+      return app.helpers.reject({
+        code: 400,
+        type: 's002',
+        fields: [],
+        message: 'userDeleteError',
+        display: 'error.userDeleteError',
+        error
+      });
+    });
   }
 
 }

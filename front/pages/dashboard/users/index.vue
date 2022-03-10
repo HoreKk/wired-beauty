@@ -6,7 +6,9 @@
         <p class="mt-2 text-sm text-gray-700">A list of all the users in your account including their name, title, email and role.</p>
       </div>
       <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-        <button type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Add user</button>
+        <NuxtLink to="/dashboard/users/new" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
+          Add user
+        </NuxtLink>
       </div>
     </div>
     <div class="mt-8 flex flex-col">
@@ -16,7 +18,7 @@
             <table class="min-w-full divide-y divide-gray-300">
               <thead class="bg-gray-50">
                 <tr>
-                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Fullname</th>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Full name</th>
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Role</th>
                   <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
@@ -30,9 +32,12 @@
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ user.email }}</td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ roles[user.type] }}</td>
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <a href="#" class="text-indigo-600 hover:text-indigo-900"
-                      >Edit<span class="sr-only">, {{ user.firstname }}</span></a
-                    >
+                    <NuxtLink :to="`/dashboard/users/${user._id}`" class="text-indigo-600 hover:text-indigo-900">
+                      Edit
+                    </NuxtLink>
+                    <button type="button" class="text-red-600 hover:text-red-900" @click="deleteUser(user._id)">
+                      Delete
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -79,7 +84,7 @@
               <button v-for="page in pageArray" :key="page" @click="pagination.page = page" :class="[page == pagination.page ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50']" class="relative cursor-pointer inline-flex items-center px-4 py-2 border text-sm font-medium"> 
                 {{ page }}
               </button>
-              <button @click="++pagination.page" :disabled="pagination.page === pageArray.length" class="relative not-disabled:cursor-pointer inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-75 disabled:bg-gray-100">
+              <button @click="++pagination.page" :disabled="pagination.page === pageArray.length || pageArray.length" class="relative not-disabled:cursor-pointer inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-75 disabled:bg-gray-100">
                 <font-awesome-icon :icon="['fa', 'chevron-right']" />
               </button>
             </nav>
@@ -95,11 +100,12 @@
 export default {
   name: 'DashboardUsersList',
   layout: 'dashboard',
+  middleware: 'auth',
   data() {
     return {
       pagination: {
         page: 1,
-        numberPerPage: 4,
+        numberPerPage: 10,
         count: 0,
       },
       users: [],
@@ -108,7 +114,7 @@ export default {
   },
   computed: {
     pageArray() { 
-      return [...Array(Math.round(this.pagination.count / this.pagination.numberPerPage)).keys()].map(x => ++x)
+      return [...Array(Math.round(this.pagination.count / this.pagination.numberPerPage) || 1).keys()].map(x => ++x)
     }
   },
   watch: {
@@ -117,18 +123,22 @@ export default {
     },
   },
   async mounted() {
-    const response = await this.$axios.get('/user/count')
-    this.pagination.count = response.data
-
     await this.fetchUsers()
   },
   methods: {
     async fetchUsers() {
-      const response = await this.$axios.get('/user', {
+      let response = await this.$axios.get('/user/count')
+      this.pagination.count = response.data
+
+      response = await this.$axios.get('/user', {
         params: this.pagination,
       })
       this.users = response.data
-    }
+    },
+    async deleteUser(id) {
+      await this.$axios.delete(`/user/${id}`)
+      await this.fetchUsers()
+    },
   },
 }
 

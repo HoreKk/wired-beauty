@@ -4,7 +4,7 @@ module.exports = (app) => {
   const { ensureAuthenticated } = app.middlewares;
   const router = new Router();
 
-  const { findUserById, findUsers, countUsers, updateUser } = app.action.user;
+  const { findUserById, findUsers, countUsers, updateUser, deleteUserById } = app.action.user;
   
   
   // Count Users
@@ -19,13 +19,19 @@ module.exports = (app) => {
   
   // Update User by id
   router.put('/update/:id',
-  updateUser
+    updateUser
   );
   
   // Find User by id
   router.get('/:id',
     ensureAuthenticated,
     findUserById
+  )
+
+  // Delete User by id
+  router.delete('/:id',
+    ensureAuthenticated,
+    deleteUserById
   )
   
   return router;
