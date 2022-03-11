@@ -19,12 +19,12 @@ module.exports = (app) => {
   
   // Update User by id
   router.put('/update/:id',
+    ensureAuthenticated,
     updateUser
   );
   
   // Find User by id
   router.get('/:id',
-    ensureAuthenticated,
     findUserById
   )
 

@@ -11,6 +11,7 @@ module.exports = (app) => {
         return User.findOne({ _id: id, enabled: true });
       })
       .then((user) => {
+        if (!user) return unauthorized('User does not exist');
         return req.user = {
           id: user._id
         };
