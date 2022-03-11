@@ -55,6 +55,7 @@ module.exports = (app) => {
       show ? {} : { password: 0 }
       ).exec()
       .then((result) => {
+        console.log('eee', result)
       // Returns null is no match found
       // Returns the document if found
       return result;
@@ -72,7 +73,9 @@ module.exports = (app) => {
   // Find User by _id
   function findById(id) {
     return User.findById(id).exec()
-    .then(app.helpers.ensureOne)
+    .then((data) => {
+      return data;
+    })
     .catch((error) => {
       return app.helpers.reject({
         code: 401,
@@ -165,7 +168,6 @@ module.exports = (app) => {
       if (!data) return app.helpers.reject(new Error('User not found'));
       return data;
     })
-    .then(app.helpers.ensureOne)
     .catch((error) => {
       return app.helpers.reject({
         code: "500",

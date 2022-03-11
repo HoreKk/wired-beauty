@@ -35,9 +35,7 @@ module.exports = (app) => {
   // Find User by Id
   async function findUserById(req, res) {
     const { id } = req.params;
-
     return findById(id)
-    .then(app.helpers.ensureOne)
     .then((user) => {
       res.success(user);
     })

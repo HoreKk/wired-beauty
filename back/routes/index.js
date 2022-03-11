@@ -8,5 +8,6 @@ module.exports = (app) => {
   //* Importing all the routes
   app.use('/user', require('./user')(app));
   app.use('/auth', require('./authentication')(app));
+  app.use('/study', require('./study')(app));
   app.use('/upload', express.static('upload'));
 }

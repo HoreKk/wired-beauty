@@ -111,6 +111,7 @@ module.exports = (app) => {
 
   const User = mongoose.model('Users', UserSchema);
   app.models = {
-    User
+    ...app.models,
+    User,
   };
 }

@@ -1,5 +1,7 @@
 .env
 node_modules/
-package-lock.json
 config-dev.json
 config.json
+package-lock.json
+front/package-lock.json
+back/.DS_Store
