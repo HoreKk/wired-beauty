@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white header px-5">
+  <div class="bg-white header px-5" style="z-index:10; position:relative;">
     <div class="hidden md:flex justify-between">
       <select
         class="
@@ -16,7 +16,7 @@
         <option>KR</option>
       </select>
       <div class="space-x-6 uppercase text-xs mr-0">
-        <NuxtLink to="/test">Contact us</NuxtLink>
+        <NuxtLink hidden to="/test">Contact us</NuxtLink>
         <NuxtLink to="/test">Log in</NuxtLink>
         <NuxtLink to="/test">Become a panelist</NuxtLink>
       </div>
@@ -25,6 +25,7 @@
       <h1 class="uppercase titleFont text-4xl">Wired Beauty</h1>
     </div>
     <div class="hidden md:flex space-x-8 text-sm justify-center py-3">
+      <NuxtLink to="/whatwedo">WHAT WE DO</NuxtLink>
       <NuxtLink to="/test">NEW NOMADIC LABGRADE DEVICE& APP</NuxtLink>
       <NuxtLink to="/test">WHO WE ARE</NuxtLink>
       <NuxtLink to="/test">SCIENTIFIC VALIDATION</NuxtLink>
@@ -44,6 +45,7 @@
     <div id="sliderMenu" class="bg-white border w-1/2 h-screen close md:hidden">
       <div>
         <ul class="text-center mt-20 space-y-8">
+          <li><NuxtLink to="/test">WHAT WE DO</NuxtLink></li>
           <li>
             <NuxtLink to="/test">NEW NOMADIC LABGRADE DEVICE& APP</NuxtLink>
           </li>
@@ -129,7 +131,6 @@ label div:nth-child(2) {
   width: 30px;
 }
 
-
 #menu_checkbox:checked + label div:first-child {
   top: -6px;
   transform: rotateZ(45deg);
@@ -146,6 +147,4 @@ label div:nth-child(2) {
   right: 7px;
   transform: rotateZ(-45deg);
 }
-
-
 </style>
