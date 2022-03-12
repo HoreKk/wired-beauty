@@ -29,8 +29,8 @@
                   <ScatterChart :key="keyChart" :data="stepOneChart.graph2" :options="stepOneChart.graph2.options" />
                 </div>
                 <div class="mx-14">
-                  <label for="comment" class="block text-sm font-medium text-gray-700">Add comment</label>
                   <div class="mt-3">
+                    <label for="comment" class="relative whitespace-nowrap text-sm font-medium text-gray-700">Add comment</label>
                     <textarea v-model="stepOneChart.comment" rows="4" name="comment" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
                   </div>
                 </div>
@@ -44,8 +44,8 @@
                   <ScatterChart :key="keyChart" :data="stepTwoChart.graph2" :options="stepTwoChart.graph2.options" />
                 </div>
                 <div class="mx-14">
-                  <label for="comment" class="block text-sm font-medium text-gray-700">Add comment</label>
                   <div class="mt-3">
+                    <label for="comment" class="relative whitespace-nowrap text-sm font-medium text-gray-700">Add comment</label>
                     <textarea v-model="stepTwoChart.comment" rows="4" name="comment" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
                   </div>
                 </div>
@@ -59,8 +59,8 @@
                   <ScatterChart :key="keyChart" :data="stepThreeChart.graph2" :options="stepThreeChart.graph2.options" />
                 </div>
                 <div class="mx-14">
-                  <label for="comment" class="block text-sm font-medium text-gray-700">Add comment</label>
                   <div class="mt-3">
+                    <label for="comment" class="relative whitespace-nowrap text-sm font-medium text-gray-700">Add comment</label>
                     <textarea v-model="stepThreeChart.comment" rows="4" name="comment" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
                   </div>
                 </div>

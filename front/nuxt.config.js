@@ -8,7 +8,7 @@ export default {
         href: 'https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap',
       },
     ],
-    title: 'front',
+    title: 'Wired-Beauty',
     htmlAttrs: {
       lang: 'en',
     },
