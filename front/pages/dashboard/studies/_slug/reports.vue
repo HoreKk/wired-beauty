@@ -1,46 +1,74 @@
 <template>
   <div class="w-full">
     <StudySidebar :is-create="isCreate" />
-    <div class="px-4 mt-6">
-      <form enctype="multipart/form-data" @submit.prevent="handleStudyForm">
-        <div class="shadow sm:rounded-md sm:overflow-hidden">
+    <div class="px-4">
+      <form enctype="multipart/form-data" @submit.prevent="exportData">
+        <div class="shadow sm:rounded-md sm:overflow-hidden mt-8 mb-8">
           <div class="bg-white py-6 px-4 space-y-6 sm:p-6">
             <div>
               <h3 class="text-lg leading-6 font-medium text-gray-900">Report Builder</h3>
               <p class="mt-1 text-sm text-gray-500">Generate a Study report from imported datasets.</p>
             </div>
-            <div class="">
-              <p class="mb-2 text-sm text-gray-500">Select one or multiple datasets</p>
-              <MultipleSelect v-model="selectedDataset" :options="datasets" placeholder="Select your datasets" label="name" :multiple="true" track-by="name"></MultipleSelect>
-            </div>
-            <div class="mt-4">
-              <p class="mb-2 text-sm text-gray-500">Select the sheet that contains data keys</p>
-              <MultipleSelect v-model="selectedSheet" :options="sheets" placeholder="Select Sheets" label="name" :multiple="true" track-by="name"></MultipleSelect>
+            <div class="flex flex-row w-full justify-items-start">
+              <div class="w-1/3 mr-8">
+                <p class="mb-2 text-sm text-gray-500">Select one or multiple datasets</p>
+                <MultipleSelect v-model="selectedDataset" :options="datasets" placeholder="Select your datasets" label="name" :multiple="true" track-by="name"></MultipleSelect>
+              </div>
+              <div class="w-1/3">
+                <p class="mb-2 text-sm text-gray-500">Select one or multiple sheets that contains the data</p>
+                <MultipleSelect v-model="selectedSheet" :options="sheets" placeholder="Select Sheets" label="name" :multiple="true" track-by="name"></MultipleSelect>
+              </div>
             </div>
 
             <div class="grid gap-6">
-              <h2 class="font-semibold text-lg leading-6 text-gray-900">Score 1 Anti-oxydation</h2>
-              <div class="mt-1 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                <h3 class="text-center text-lg leading-6 font-medium text-gray-900">Average VITC & SKC from T0 to T14, Criteria 1 = Anti-oxydation, Sample size (N = 1000)</h3>
-                <BarChart :data="stepOneChart" :options="{ responsive: true, maintainAspectRatio: false }" />
-                <BarChart :data="stepOneChartCloud" :options="{ responsive: true, maintainAspectRatio: false }" />
+              <div class="mt-6 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+              <h1 class="font-bold text-lg leading-6 text-gray-900">Score 1 Anti-oxydation</h1>
+                <div class="my-8 flex flex-row justify-evenly">
+                  <LineChart :key="keyChart" :data="stepOneChart" :options="stepOneChart.options" />
+                  <ScatterChart :key="keyChart" :data="stepOneChart.graph1" :options="stepOneChart.graph1.options" />
+                  <ScatterChart :key="keyChart" :data="stepOneChart.graph2" :options="stepOneChart.graph2.options" />
+                </div>
+                <div class="mx-14">
+                  <label for="comment" class="block text-sm font-medium text-gray-700">Add comment</label>
+                  <div class="mt-3">
+                    <textarea v-model="stepOneChart.comment" rows="4" name="comment" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                  </div>
+                </div>
               </div>
 
-              <h2 class="font-semibold text-lg leading-6 text-gray-900">Score 2 Moisturizing</h2>
-              <div class="mt-1 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                <h3 class="text-center text-lg leading-6 font-medium text-gray-900">Average VITC & SKC from T0 to T14, Criteria 2 = Moisturizing, Sample size (N = 1000)</h3>
-                <BarChart :data="stepTwoChart" :options="{ responsive: true, maintainAspectRatio: false }" />
+              <div class="mt-6 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+              <h1 class="font-semibold text-lg leading-6 text-gray-900">Score 2 Moisturizing</h1>
+                <div class="my-8 flex flex-row justify-evenly">
+                  <LineChart :key="keyChart" :data="stepTwoChart" :options="stepTwoChart.options" />
+                  <ScatterChart :key="keyChart" :data="stepTwoChart.graph1" :options="stepTwoChart.graph1.options" />
+                  <ScatterChart :key="keyChart" :data="stepTwoChart.graph2" :options="stepTwoChart.graph2.options" />
+                </div>
+                <div class="mx-14">
+                  <label for="comment" class="block text-sm font-medium text-gray-700">Add comment</label>
+                  <div class="mt-3">
+                    <textarea v-model="stepTwoChart.comment" rows="4" name="comment" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                  </div>
+                </div>
               </div>
 
-              <h2 class="font-semibold text-lg leading-6 text-gray-900">Score 3 Protecting (Barrière)</h2>
-              <div class="mt-1 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                <h3 class="text-center text-lg leading-6 font-medium text-gray-900">Average VITC & SKC from T0 to T14, Criteria 3 = Protecting (Barrière), Sample size (N = 1000)</h3>
-                <BarChart :data="stepThreeChart" :options="{ responsive: true, maintainAspectRatio: false }" />
+              <div class="mt-6 flex flex-col justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                <h1 class="font-semibold text-lg leading-6 text-gray-900">Score 3 Protecting (Barrière)</h1>
+                <div class="my-8 flex flex-row justify-evenly">
+                  <LineChart :key="keyChart" :data="stepThreeChart" :options="stepThreeChart.options" />
+                  <ScatterChart :key="keyChart" :data="stepThreeChart.graph1" :options="stepThreeChart.graph1.options" />
+                  <ScatterChart :key="keyChart" :data="stepThreeChart.graph2" :options="stepThreeChart.graph2.options" />
+                </div>
+                <div class="mx-14">
+                  <label for="comment" class="block text-sm font-medium text-gray-700">Add comment</label>
+                  <div class="mt-3">
+                    <textarea v-model="stepThreeChart.comment" rows="4" name="comment" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-            <button type="submit" class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click.prevent="submitFile">Upload</button>
+            <button type="submit" class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" @click.prevent="exportData">Export</button>
           </div>
         </div>
       </form>
@@ -51,13 +79,15 @@
 <script>
 import StudySidebar from '~/components/dashboard/StudySidebar.vue';
 import MultipleSelect from '~/components/MultipleSelect.vue';
-import BarChart from '~/components/charts/BarChart.vue';
+import LineChart from '~/components/charts/LineChart.vue';
+import ScatterChart from '~/components/charts/ScatterChart.vue';
 
 export default {
   name: 'StudyReports',
   components: {
     StudySidebar,
-    BarChart,
+    LineChart,
+    ScatterChart,
     MultipleSelect
   },
   layout: 'dashboard',
@@ -66,49 +96,79 @@ export default {
     return {
       selectedDataset: [],
       datasets: [],
-      sheets: [],
       selectedSheet: [],
-      columns: [],
-      selectedColumns: [],
-      firstOption: [],
-      firstOptionList: [],
+      sheets: [],
       stepOneChart: {
         labels: [],
-        datasets: [
-          {
-            label: '',
-            backgroundColor: '#41B38A',
-            data: []
+        datasets: [],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        },
+        comment: '',
+        graph1: {
+          labels: [],
+          datasets: [],
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
           }
-        ]
+        },
+        graph2: {
+          labels: [],
+          datasets: [],
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        }
       },
       stepTwoChart: {
         labels: [],
-        datasets: [
-          {
-            label: '',
-            backgroundColor: '#41B38A',
-            data: []
+        datasets: [],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        },
+        comment: '',
+        graph1: {
+          datasets: [],
+          labels: [],
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
           }
-        ]
+        },
+        graph2: {
+          datasets: [],
+          labels: [],
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        }
       },
       stepThreeChart: {
         labels: [],
-        datasets: [
-          {
-            label: '',
-            backgroundColor: '#41B38A',
-            data: []
-          }
-        ]
+        datasets: [],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        },
+        comment: '',
+        graph1: {
+          labels: [],
+          datasets: [],
+          options: {}
+        },
+        graph2: {
+          labels: [],
+          datasets: [],
+          options: {}
+        }
       },
-      files: []
+      keyChart: 0
     }
-  },
-  computed: {
-    isCreate() {
-      return this.$route.params.slug === 'create';
-    },
   },
   watch: {
     selectedDataset() {
@@ -125,80 +185,15 @@ export default {
       cols = [...new Set(cols)];
       this.columns = cols;
 
-      let data = this.selectedSheet.flatMap(sheet => sheet.data);
-      data = data.map(col => col);
-
       // Criteria 1 = Anti-oxydation
-      this.stepOneChart.labels = ['TO_jour 0', 'Timme_jour 0 après application', 'T7_jour 7', 'T14_jour 14'];
-      const AvgVITC = [];
-      const AvgSKC = [];
-      for (let i = 0; i < 4; i ++) {
-        AvgVITC[i] = data.filter(d => d.product_code === 100218 && d.session_id === i+1 && d.score_skinbiosense === 1);
-        AvgVITC[i] = AvgVITC[i].reduce((p, c) => p + c.mesure, 0 ) / AvgVITC[i].length;
-        AvgSKC[i] = data.filter(d => d.product_code === 417432 && d.session_id === i+1 && d.score_skinbiosense === 1);
-        AvgSKC[i] = AvgSKC[i].reduce((p, c) => p + c.mesure, 0 ) / AvgSKC[i].length;
-
-      }
-      this.stepOneChart.datasets = [ {
-          label: 'VITC',
-          backgroundColor: '#FF7F50',
-          data: AvgVITC
-        },
-        {
-          label: 'SKC',
-          backgroundColor: '#6495ED',
-          data: AvgSKC
-        } ];
-
-      // Criteria 2 = Moisturizing
-      this.stepTwoChart.labels = ['TO_jour 0', 'Timme_jour 0 après application', 'T7_jour 7', 'T14_jour 14'];
-      const AvgVITC2 = [];
-      const AvgSKC2 = [];
-      for (let i = 0; i < 4; i ++) {
-        AvgVITC2[i] = data.filter(d => d.product_code === 100218 && (d.session_id === i+1) && d.score_skinbiosense === 2);
-        AvgVITC2[i] = AvgVITC2[i].reduce((p, c) => p + c.mesure, 0 ) / AvgVITC2[i].length;
-        AvgSKC2[i] = data.filter(d => d.product_code === 417432 && d.session_id === i+1 && d.score_skinbiosense === 2);
-        AvgSKC2[i] = AvgSKC2[i].reduce((p, c) => p + c.mesure, 0 ) / AvgSKC2[i].length;
-
-      }
-      this.stepTwoChart.datasets = [ {
-          label: 'VITC',
-          backgroundColor: '#FF7F50',
-          data: AvgVITC2
-        },
-        {
-          label: 'SKC',
-          backgroundColor: '#6495ED',
-          data: AvgSKC2
-        } ];
-
-      // Criteria 3 = Protecting
-      this.stepThreeChart.labels = ['TO_jour 0', 'Timme_jour 0 après application', 'T7_jour 7', 'T14_jour 14'];
-      const AvgVITC3 = [];
-      const AvgSKC3 = [];
-      for (let i = 0; i < 4; i ++) {
-        AvgVITC3[i] = data.filter(d => d.product_code === 100218 && (d.session_id === i+1) && d.score_skinbiosense === 3);
-        AvgVITC3[i] = AvgVITC3[i].reduce((p, c) => p + c.mesure, 0 ) / AvgVITC3[i].length;
-        AvgSKC3[i] = data.filter(d => d.product_code === 417432 && d.session_id === i+1 && d.score_skinbiosense === 3);
-        AvgSKC3[i] = AvgSKC3[i].reduce((p, c) => p + c.mesure, 0 ) / AvgSKC3[i].length;
-
-      }
-      this.stepThreeChart.datasets = [ {
-          label: 'VITC',
-          backgroundColor: '#FF7F50',
-          data: AvgVITC3
-        },
-        {
-          label: 'SKC',
-          backgroundColor: '#6495ED',
-          data: AvgSKC3
-        } ];
+      this.generateCharts(1);
+      // Criteria 1 = Hydration
+      this.generateCharts(2);
+      // Criteria 1 = Protection
+      this.generateCharts(3);
+      // Rerender charts
+      this.keyChart++;
     },
-    selectedColumns() {
-      let opts = this.selectedSheet.flatMap(sheet => sheet.data);
-      opts = Object.keys(opts).filter(o => o.includes(this.selectedColumns))
-      this.firstOptionList = opts;
-    }
   },
   mounted() {
     this.init();
@@ -214,20 +209,7 @@ export default {
           console.error(e);
         });
     },
-    blobToBase64(blob) {
-      // eslint-disable-next-line promise/param-names
-      return new Promise((resolve, _) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.readAsDataURL(blob);
-      });
-    },
-    parseBuffer(fileId) {
-      return this.$axios.get('/study/dataset/' + fileId + '/download', { responseType: 'blob' })
-        .then((response) => {
-      });
-    },
-    async handleStudyForm() {
+    async exportData() {
       if (this.$route.params.slug) {
         await this.$axios
           .post("/study/" + this.$route.params.slug, { ...this.study })
@@ -239,20 +221,194 @@ export default {
           });
       }
     },
-    downloadFile(fileId, fileName) {
-      if (!fileId) return;
-      return this.$axios.get('/study/dataset/' + fileId + '/download', { responseType: 'blob' })
-        .then((response) => {
-          const url = URL.createObjectURL(new Blob([response.data], {
-            type: 'application/vnd.ms-excel'
-          }))
-          const link = document.createElement('a')
-          link.href = url
-          link.setAttribute('download', fileName)
-          document.body.appendChild(link)
-          link.click();
+    generateCharts(scoreId) {
+      let data = this.selectedSheet.flatMap(sheet => sheet.data);
+      data = data.map(col => col);
+      const stepsChart = {
+        labels: [],
+        datasets: [],
+        options: {},
+        comment: '',
+        graph1: {
+          labels: [],
+          datasets: [],
+          options: {}
+        },
+        graph2: {
+          labels: [],
+          datasets: [],
+          options: {}
+        }
+      };
+      stepsChart.labels = ['T0_day 0', 'Timme_day 0 after application', 'T7_day 7', 'T14_day 14'];
+      stepsChart.graph1.labels = ['T0_day 0', 'Timme_day 0 after application', 'T7_day 7', 'T14_day 14'];
+      stepsChart.graph2.labels = ['T0_day 0', 'Timme_day 0 after application', 'T7_day 7', 'T14_day 14'];
+      const AvgVITC = [];
+      const AvgSKC = [];
+      const ScatterVITC = [];
+      const ScatterSKC = [];
+      for (let i = 0; i < 4; i ++) {
+        AvgVITC[i] = data.filter(d => d.product_code === 100218 && d.session_id === i+1 && d.score_skinbiosense === scoreId);
+        ScatterVITC[i] = data.filter(d => d.product_code === 100218 && d.session_id === i+1 && d.score_skinbiosense === scoreId).map((d) => {
+          return {
+            'x': d.session_id,
+            'y': d.mesure
+          };
         });
-    },
+        AvgVITC[i] = AvgVITC[i].reduce((p, c) => p + c.mesure, 0 ) / AvgVITC[i].length;
+        AvgSKC[i] = data.filter(d => d.product_code === 417432 && d.session_id === i+1 && d.score_skinbiosense === scoreId);
+        ScatterSKC[i] = data.filter(d => d.product_code === 417432 && d.session_id === i+1 && d.score_skinbiosense === scoreId).map((d) => {
+          return {
+            'x': d.session_id,
+            'y': d.mesure
+          };
+        });
+        AvgSKC[i] = AvgSKC[i].reduce((p, c) => p + c.mesure, 0 ) / AvgSKC[i].length;
+      }
+      stepsChart.graph1 = {
+        labels: ['TO_day 0', 'Timme_day 0 after application', 'T7_day 7', 'T14_day 14'],
+        datasets: [
+          {
+            label: 'Average_VITC',
+            backgroundColor: '#FF7F50',
+            data: AvgVITC.map((d, i) => {return { x: i+1, y: d }}),
+            fill: false,
+            borderColor: 'blue',
+            borderWidth: 6,
+            pointRadius: 6,
+            pointStyle : 'line'
+          },
+          {
+            label: 'VITC',
+            backgroundColor: '#FF7F50',
+            data: ScatterVITC.reduce((acc, curVal) => acc.concat(curVal), []),
+            fill: false,
+            borderColor: '#F97F50',
+            borderWidth: 3,
+            pointRadius: 3,
+            borderCapStyle : 'round'
+          }
+        ],
+        options: {
+          responsive: true, 
+          maintainAspectRatio: false,
+          title: {
+            display: true,
+            text: 'VitC build up power at T0, TImme, T7 and T14'
+          },
+          scales: {
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'uA.V'
+              }
+            }],
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'N° Session'
+              }
+            }]
+          },
+        }
+      };
+      stepsChart.graph2 = {
+        labels: ['T0_day 0', 'TImme_day 0 after application', 'T7_day 7', 'T14_day 14'],
+        datasets: [
+          {
+            label: 'Average_SKC',
+            backgroundColor: '#6495ED',
+            data: AvgSKC.map((d, i) => {return { x: i+1, y: d }}),
+            fill: false,
+            borderColor: 'red',
+            borderWidth: 6,
+            pointRadius: 6,
+            pointStyle : 'line'
+          },
+          {
+            label: 'SKC',
+            backgroundColor: '#6495ED',
+            data: ScatterSKC.reduce((acc, curVal) => acc.concat(curVal), []),
+            fill: false,
+            borderColor: '#6495ED',
+            borderWidth: 3,
+            pointRadius: 3,
+            borderCapStyle : 'round'
+          }
+        ],
+        options: {
+          responsive: true, 
+          maintainAspectRatio: false,
+          title: {
+            display: true,
+            text: 'SkinCeuticals build up power at T0, TImme, T7 and T14'
+          },
+          scales: {
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'uA.V'
+              }
+            }],
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'N° Session'
+              }
+            }]
+          },
+        }
+      };
+      stepsChart.datasets.push({
+          label: 'VITC',
+          backgroundColor: '#FF7F50',
+          data: AvgVITC,
+          fill: false,
+          borderColor: '#F97F50',
+          borderWidth: 3,
+          pointRadius: 3,
+          borderDash: [0,6],
+          borderCapStyle : 'round',
+          lineTension: 0
+        },
+        {
+          label: 'SKC',
+          backgroundColor: '#6495ED',
+          data: AvgSKC,
+          fill: false,
+          borderColor: '#6495ED',
+          borderWidth: 3,
+          pointRadius: 3,
+          borderDash: [0,6],
+          borderCapStyle : 'round',
+          lineTension: 0
+        });
+      stepsChart.options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'uA.V'
+            }
+          }],
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'N° Session'
+            }
+          }]
+        },
+        title: {
+          display: true,
+          text: 'VitC & SkinCeuticals build up power at T0, TImme, T7 and T14'
+        }
+      }
+      if (scoreId === 1) this.stepOneChart = stepsChart;
+      if (scoreId === 2) this.stepTwoChart = stepsChart;
+      if (scoreId === 3) this.stepThreeChart = stepsChart;
+    }
   }
 }
 </script>

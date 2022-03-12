@@ -1,5 +1,5 @@
 module.exports = (app) => {
-  const { createStudyService, getStudyById, updateStudyById, fetchAllStudies, uploadDatasetByStudyIdService, fetchDatasetByStudy, removeDatasetById, downloadDatasetById, getDatasetsByIds } = app.services.study;
+  const { createStudyService, getStudyById, updateStudyById, fetchAllStudies, uploadDatasetByStudyIdService, fetchDatasetByStudy, removeDatasetById, downloadDatasetById, getDatasetsByIds, removeStudyById } = app.services.study;
   return {
     createStudy,
     getStudy,
@@ -9,7 +9,8 @@ module.exports = (app) => {
     getDatasetByStudyId,
     deleteDatasetById,
     downloadDataset,
-    fetchDatasetsToJson
+    fetchDatasetsToJson,
+    deleteStudyById
   }
 
   async function createStudy(req, res) {
@@ -149,6 +150,32 @@ module.exports = (app) => {
             type: "a005",
             message: "Error fetching files for study",
             display: "error.fetchDatasets",
+            err: err.err
+          });
+      });
+    } catch (error) {
+      return res.error({
+        code: "500",
+        type: "a001",
+        message: "Api loading error",
+        display: "error.serverComponents",
+        err: error
+      });
+    }
+  }
+
+  async function deleteStudyById(req, res) {
+    try {
+      removeStudyById(req.params.id)
+      .then(async (data) => {
+          return res.success(data);
+        })
+        .catch(async (err) => {
+          return res.error({
+            code: "400",
+            type: "a005",
+            message: "Error deleting study",
+            display: "error.deleteStudy",
             err: err.err
           });
       });

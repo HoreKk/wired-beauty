@@ -1,5 +1,4 @@
 module.exports = (app) => {
-  const xlsx = require('node-xlsx');
   const path = require('path');
   const { Study, File } = app.models;
   return {
@@ -11,7 +10,8 @@ module.exports = (app) => {
     fetchDatasetByStudy,
     removeDatasetById,
     downloadDatasetById,
-    getDatasetsByIds
+    getDatasetsByIds,
+    removeStudyById
   };
 
   // Find Study by id
@@ -99,6 +99,22 @@ module.exports = (app) => {
         type: "s001",
         message: "Study could not be found",
         display: "error.updateStudy",
+        error
+      });
+    });
+  }
+
+  // Delete study by id
+  function removeStudyById(_id) {
+    return Study.deleteOne({  _id })
+      .then((result) => {
+      return result;
+    }).catch((error) => {
+      return app.helpers.reject({
+        code: "500",
+        type: "s001",
+        message: "Study could not be deleted",
+        display: "error.deleteStudy",
         error
       });
     });

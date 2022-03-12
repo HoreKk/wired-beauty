@@ -1,14 +1,9 @@
 <script>
-  import { Line } from 'vue-chartjs'
+  import { Scatter } from 'vue-chartjs'
 
   export default {
-    extends: Line,
+    extends: Scatter,
     props: ['data', 'options'],
-    watch: {
-      data() {
-        this.$data._chart.update();
-      }
-    },
     mounted() {
       this.renderChart(this.data, this.options);
     }

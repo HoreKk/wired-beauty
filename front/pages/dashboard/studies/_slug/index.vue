@@ -84,6 +84,7 @@ export default {
           .post("/study/create", { ...this.study })
           .then(({ data }) => {
             console.log(data);
+            this.$router.push('/dashboard/studies/' + data._id);
           })
           .catch((e) => {
             console.error(e);

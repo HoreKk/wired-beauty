@@ -40,6 +40,9 @@
                       <span class="sr-only">, {{ study.name }}</span>
                       <font-awesome-icon :icon="['fa', 'pen-to-square']" :class="['flex-shrink-0 -ml-1 mr-3 h-4 w-4']" aria-hidden="true" />
                     </NuxtLink>
+                    <button class="text-red-600 hover:text-red-900" @click.prevent="deleteStudy(study._id)">
+                      <font-awesome-icon :icon="['fa', 'trash-can']" :class="['flex-shrink-0 -ml-1 mr-3 h-4 w-4']" aria-hidden="true" />
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -77,6 +80,11 @@ export default {
         .catch((e) => {
           console.error(e);
         });
+    },
+    async deleteStudy(studyId) {
+      if (!studyId) return;
+      await this.$axios.delete('/study/studies/' + studyId);
+      this.init();
     },
   }
 }

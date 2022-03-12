@@ -19,7 +19,7 @@ module.exports = (app) => {
   
   var upload = multer({ storage: storage });
 
-  const { createStudy, getStudy, updateStudy, findAllStudies, uploadDatasetByStudyId, getDatasetByStudyId, deleteDatasetById, downloadDataset, fetchDatasetsToJson } = app.action.study;
+  const { createStudy, getStudy, updateStudy, findAllStudies, uploadDatasetByStudyId, getDatasetByStudyId, deleteDatasetById, downloadDataset, fetchDatasetsToJson, deleteStudyById } = app.action.study;
   
   // Create a new study
   router.post('/create',
@@ -54,6 +54,11 @@ module.exports = (app) => {
   router.delete('/dataset/:id',
     ensureAuthenticated,
     deleteDatasetById
+  );
+
+  router.delete('/studies/:id',
+    ensureAuthenticated,
+    deleteStudyById
   );
 
   // Find study by id
