@@ -87,8 +87,8 @@ module.exports = (app) => {
       return next(error);
     }
     user.created_at = new Date();
-    if (! user.type) user.type = 0;
-    user.enabled = true;
+    if (!user.type) user.type = 0;
+    if (user.enabled === null || user.enabled === undefined) user.enabled = true;
     next();
   });
 

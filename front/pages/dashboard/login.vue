@@ -20,7 +20,9 @@
 
         <div class="flex items-center justify-center">
           <div class="text-sm">
-            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> Forgot your password? </a>
+            <NuxtLink to="/dashboard/resetPassword" class="font-medium text-indigo-600 hover:text-indigo-500"> 
+              Forgot your password?
+            </NuxtLink>
           </div>
         </div>
 
@@ -39,7 +41,6 @@
 export default {
   name: 'LoginPage',
   layout: 'simple',
-  middleware: 'auth',
   data() {
     return {
       login: {

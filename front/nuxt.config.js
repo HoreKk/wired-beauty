@@ -1,5 +1,5 @@
 export default {
-  ssr: false,
+  ssr: true,
   head: {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

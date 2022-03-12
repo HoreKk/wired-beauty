@@ -6,7 +6,10 @@
         <p class="mt-2 text-sm text-gray-700">A list of all the users in your account including their name, title, email and role.</p>
       </div>
       <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-        <NuxtLink to="/dashboard/users/new" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
+        <NuxtLink to="/dashboard/users/inviteLink" class="inline-flex items-center justify-center rounded-md border-2 border-indigo-600 px-4 py-2 text-sm font-medium text-indigo-600 shadow-sm hover:text-indigo-500 hover:border-indigo-500  focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto">
+          Create invitation link
+        </NuxtLink>
+        <NuxtLink to="/dashboard/users/new" class="ml-3 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
           Add user
         </NuxtLink>
       </div>
@@ -21,6 +24,7 @@
                   <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Full name</th>
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Role</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Active</th>
                   <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                     <span class="sr-only">Edit</span>
                   </th>
@@ -31,7 +35,13 @@
                   <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ user.firstname + ' ' + user.lastname }}</td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ user.email }}</td>
                   <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ roles[user.type] }}</td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <font-awesome-icon :class="user.enabled ? 'text-green-500' : 'text-red-500'" :icon="user.enabled ? ['fa', 'check'] : ['fa', 'xmark']"></font-awesome-icon>
+                  </td>
                   <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right sm:pr-6">
+                    <button v-if="!user.enabled" class="m-2 text-sm font-medium text-amber-600 hover:text-amber-900" @click="copyInvationLink(user)">
+                      Copy Invitation Link
+                    </button>
                     <NuxtLink :to="`/dashboard/users/${user._id}`" class="text-sm font-medium text-indigo-600 hover:text-indigo-900">
                       Edit
                     </NuxtLink>
@@ -139,6 +149,9 @@ export default {
       await this.$axios.delete(`/user/${id}`)
       await this.fetchUsers()
       this.pagination.page = 1
+    },
+    copyInvationLink(user) {
+      navigator.clipboard.writeText(`http://localhost:3000/dashboard/resetPassword?token=${user.reset_password_token}`);
     },
   },
 }

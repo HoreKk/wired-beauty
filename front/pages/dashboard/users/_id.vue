@@ -2,9 +2,14 @@
   <div class="w-full px-8 py-10">
     <div class="flex w-full items-center">
       <div class="flex flex-col w-full">
-        <h1 class="text-xl font-semibold text-gray-900">
-          {{ userState }} un utilisateur
-        </h1>
+        <div class="flex items-center">
+          <button class="flex w-9 h-9 justify-center items-center bg-indigo-400 rounded-full" @click="$router.go(-1)">
+            <font-awesome-icon :icon="['fa', 'angles-left']" />
+          </button>
+          <h1 class="ml-3 text-xl font-semibold text-gray-900">
+            {{ userState }} un utilisateur
+          </h1>
+        </div>
         <FormulateForm v-model="formValues" class="login-form mt-8 w-full" :form-errors="formErrors" @submit="saveUser">
           <h2 class="form-title"></h2>
           <FormulateInput
