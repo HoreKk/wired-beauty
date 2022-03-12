@@ -4,7 +4,9 @@
       <div class="flex space-x-2">
         <h2 class="">{{ blok.firstTitle }}</h2>
         <p>-</p>
-        <NuxtLink class="underline font-semibold" to="">{{ blok.link.cached_url }}</NuxtLink>
+        <NuxtLink class="underline font-semibold" to="">{{
+          blok.link.cached_url
+        }}</NuxtLink>
         <h2 class="">{{ blok.secondTitle }}</h2>
         <p>-</p>
         <h2 class="">{{ blok.desc }}</h2>
@@ -23,6 +25,5 @@ export default {
   },
 }
 </script>
-
 <style>
 </style>

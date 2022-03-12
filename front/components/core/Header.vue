@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white header px-5" style="z-index:10; position:relative;">
+  <div class="bg-white header px-5 pt-2" style="z-index:10; position:relative;">
     <div class="hidden md:flex justify-between">
       <select
         class="
