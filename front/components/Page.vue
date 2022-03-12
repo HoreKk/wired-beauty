@@ -1,7 +1,7 @@
 <template>
   <div
     v-editable="blok"
-    class="px-6">
+    class="">
     <component
       v-for="blok in blok.body"
       :key="blok._uid"
@@ -9,9 +9,10 @@
       :is="blok.component" />
   </div>
 </template>
- 
+
 <script>
 export default {
+  name: "ComponentPage",
   props: {
     blok: {
       type: Object,
