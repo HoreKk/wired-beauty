@@ -1,6 +1,6 @@
 const { Router } = require('express');
 module.exports = (app) => {
-  const { login, register, refreshToken, accessToken } = app.action.authentication;
+  const { login, register, refreshToken, accessToken, userManagementUserCreate, verifyResetPasswordToken, setResetPassword } = app.action.authentication;
   const router = new Router();
 
   // Login
@@ -23,6 +23,17 @@ module.exports = (app) => {
   router.post('/new/token',
     accessToken
   );
+
+  router.post('/security/request-password-reset',
+    // ensureFields([
+    //   { field: 'email', validations: [ 'isEmail' ], mandatory: true },
+    // ]),
+    userManagementUserCreate
+  );
+
+  router.get('/security/verify-token', verifyResetPasswordToken);
+
+  router.post('/security/reset-password', setResetPassword);
 
   return router;
 }

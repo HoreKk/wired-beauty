@@ -2,14 +2,17 @@ const bcrypt = require('bcrypt');
 
 module.exports = (app) => {
   const { User } = app.models;
-  const { findByEmail, insertUser, isRefreshTokenValid, updateRefreshToken } = app.services.user;
+  const { findByEmail, insertUser, updateUserService, isRefreshTokenValid, updateRefreshToken, updateResetPasswordToken } = app.services.user;
   const { createToken, createRefreshToken } = app.helpers.user;
 
   return {
     login,
     register,
     refreshToken,
-    accessToken
+    accessToken,
+    userManagementUserCreate,
+    setResetPassword,
+    verifyResetPasswordToken,
   };
 
   function login(req, res) {
@@ -218,5 +221,126 @@ module.exports = (app) => {
         display: 'error.invalidRefreshToken'
       });
     });
+  }
+
+  async function userManagementUserCreate(req, res) {
+    // const { sendMail } = app.services.email;
+    const session = await app.db.startSession();
+    await session.startTransaction();
+
+    const options = { new: true, setDefaultsOnInsert: true };
+    return insertUser(req.body, options)
+      .then(async (user) => {
+        if (user !== null) {
+
+          // User created successfully, we can commit Transaction
+          await session.commitTransaction();
+          // Then end the Mongoose session
+          session.endSession();
+
+          const { createResetToken } = app.helpers.user;
+
+          const passwordResetToken = await createResetToken(24);
+          const userUpdated = await updateUserService({ 
+            params: { id: user._id },
+            body: { reset_password_token: passwordResetToken } 
+          });
+
+          return res.success(userUpdated);
+
+          // Construct mail text
+          // const mailTemplate = app.templates.mailing.mailing({
+          //   group: 'test',
+          //   text: app.templates.mailing.textTemplate.userCreation(urlLink)
+          // });
+
+          // await updateResetPasswordToken(req.body.email, passwordResetToken);
+          // sendMail({
+          //   from: `${app.config.mailing.subject.Appname} <${app.config.mailing.email.from}>`,
+          //   to: [ req.body.email ].join(', '),
+          //   bcc: app.config.mailing.email.bcc,
+          //   subject: '[Appname] Activer votre compte',
+          //   html: mailTemplate
+          // });
+        } else {
+          throw await app.helpers.reject({
+            code: 400,
+            type: 'err431',
+            message: 'userServiceCreateUserExists',
+            display: 'userManagement.error.createUserExists'
+          });
+        }
+      })
+      .catch(async (error) => {
+        return res.error(error);
+      });
+  }
+
+
+  async function verifyResetPasswordToken(req, res) {
+    const { User } = app.models;
+    if (!req.query.token) {
+      return res.error({
+        code: 401,
+        type: 'err204',
+        fields: req.body.token,
+        data: req.body.token,
+        message: 'undefinedToken',
+        display: 'error.tokenInvalid'
+      });
+    }
+    return User.findOne({
+      reset_password_token: req.query.token,
+      enabled: false
+    })
+      .catch((error) => {
+        return app.helpers.reject({
+          code: 401,
+          type: 'err205',
+          fields: req.body,
+          data: req.body,
+          message: 'noUserFoundWithResetToken',
+          display: 'error.tokenInvalid',
+          err: error.error
+        });
+      })
+      .then(async (user) => {
+        res.success({ success: true, userId: user.id });
+      })
+      .catch((error) => {
+        res.error(error);
+      });
+  }
+
+  function setResetPassword(req, res) {
+    const { changePassword, removeResetPasswordToken } = app.services.user;
+
+    const { password, confirmPassword, token } = req.body;
+
+    const isPasswordTheSame = password === confirmPassword;
+    if (!isPasswordTheSame && !token) {
+      return res.error({
+        code: 401,
+        type: 'err206',
+        fields: {
+          token,
+          isPasswordTheSame
+        },
+        data: {
+          token,
+          isPasswordTheSame
+        },
+        message: 'undefinedTokenOrPasswordUnmatch',
+        display: 'error.tokenInvalid'
+      });
+    }
+
+    return changePassword(password, token)
+      .then(async () => {
+        console.log('etape 2')
+        await removeResetPasswordToken(token);
+        res.success({ success: true });
+      })
+      .catch(res.error);
   }
 }

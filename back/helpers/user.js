@@ -6,10 +6,12 @@ module.exports = (app) => {
     hashPassword,
     verifyToken,
     createToken,
-    createRefreshToken
+    createRefreshToken,
+    createResetToken,
   };
 
   async function hashPassword(password) {
+    console.log('etape 1.1')
     return bcrypt.hash(password, app.config.auth.user.saltRounds);
   }
 
@@ -79,5 +81,9 @@ module.exports = (app) => {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+  }
+
+  function createResetToken(nb = 24) {
+    return bcrypt.hash(_random(nb), app.config.auth.refreshToken.saltRounds);
   }
 };

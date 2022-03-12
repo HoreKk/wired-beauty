@@ -10,6 +10,9 @@ module.exports = (app) => {
     isRefreshTokenValid,
     updateRefreshToken,
     deleteById,
+    updateResetPasswordToken,
+    changePassword,
+    removeResetPasswordToken,
   };
 
   // Count Users
@@ -194,6 +197,61 @@ module.exports = (app) => {
         error
       });
     });
+  }
+
+  function updateResetPasswordToken(email, token) {
+    return User.update({
+      password_reset_token: token,
+      last_reset_password: new Date()
+    }, {
+      where: {
+        email
+      }
+    }).then(app.helpers.ensureOne)
+      .catch((error) => {
+        return app.helpers.reject({
+          code: 401,
+          type: 'err203',
+          fields: [],
+          message: 'passwordResetTokenCreationError',
+          display: 'error.passwordResetTokenCreationError',
+          error
+        });
+      });
+  }
+
+  async function changePassword(password, reset_password_token) {
+    const { hashPassword } = app.helpers.user;
+    return User.updateOne(
+        { reset_password_token: reset_password_token, enabled: false },
+        { $set: { password: await hashPassword(password) }}
+      )
+      .catch((error) => {
+        return app.helpers.reject({
+          code: 400,
+          type: 'err301',
+          message: 'passwordUpdateError',
+          display: 'error.passwordUpdateError',
+          error
+        });
+      });
+  }
+
+  function removeResetPasswordToken(token) {
+    return User.updateOne(
+      { reset_password_token: token },
+      { $unset: { reset_password_token: 1 }, $set: { enabled: true }},
+    ).then(app.helpers.ensureOne)
+      .catch((error) => {
+        return app.helpers.reject({
+          code: 401,
+          type: 'err207',
+          fields: [],
+          message: 'passwordResetTokenDeleteError',
+          display: 'error.passwordResetTokenDeleteError',
+          error
+        });
+      });
   }
 
 }
