@@ -87,7 +87,7 @@ module.exports = (app) => {
       return next(error);
     }
     user.created_at = new Date();
-    user.type = 0;
+    if (! user.type) user.type = 0;
     user.enabled = true;
     next();
   });
@@ -111,6 +111,7 @@ module.exports = (app) => {
 
   const User = mongoose.model('Users', UserSchema);
   app.models = {
-    User
+    ...app.models,
+    User,
   };
 }

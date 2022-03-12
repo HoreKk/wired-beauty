@@ -1,16 +1,41 @@
 module.exports = (app) => {
-  const { findById, updateUserService } = app.services.user;
+  const { findById, findWithPagination, deleteById, count, updateUserService } = app.services.user;
   return {
     findUserById,
-    updateUser
+    findUsers,
+    countUsers,
+    updateUser,
+    deleteUserById,
+  }
+
+  // Count Users
+  async function countUsers(req, res) {
+    return count()
+    .then((user) => {
+      res.success(user);
+    })
+    .catch((error) => {
+      res.error(error);
+    });
+  }
+
+  // Find Users with pagination
+  async function findUsers(req, res) {
+    const { page, numberPerPage } = req.query;
+
+    return findWithPagination(page, numberPerPage)
+    .then((user) => {
+      res.success(user);
+    })
+    .catch((error) => {
+      res.error(error);
+    });
   }
 
   // Find User by Id
   async function findUserById(req, res) {
     const { id } = req.params;
-
     return findById(id)
-    .then(app.helpers.ensureOne)
     .then((user) => {
       res.success(user);
     })
@@ -72,5 +97,18 @@ module.exports = (app) => {
         err: error
       });
     }
+  }
+
+  // Delete User by Id
+  async function deleteUserById(req, res) {
+    const { id } = req.params;
+    return deleteById(id)
+    .then(app.helpers.ensureOne)
+    .then((user) => {
+      res.success(user);
+    })
+    .catch((error) => {
+      res.error(error);
+    });
   }
 }

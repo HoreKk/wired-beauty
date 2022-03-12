@@ -1,8 +1,5 @@
 export default {
-  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: false,
-
-  // Global page headers: https://go.nuxtjs.dev/config-head
+  ssr: true,
   head: {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -21,29 +18,25 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
-  // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: [
+    '@/node_modules/@braid/vue-formulate/themes/snow/snow.scss',
+  ],
 
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/components',
   ],
-
-  // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
-
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/fontawesome',
+    '@nuxtjs/style-resources',
+    '@braid/vue-formulate/nuxt',
   ],
-
-  // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
@@ -58,23 +51,24 @@ export default {
       },
     ],
   ],
-
+  
   auth: {
     // options for auth-next
     redirect: {
       login: '/dashboard/login',
+      logout: '/dashboard/login',
+      home: '/dashboard/',
     },
     strategies: {
       local: {
+        tokenType: false,
         token: {
           property: 'token',
+          type: false,
           global: true,
-          // required: true,
-          // type: 'Bearer'
         },
         user: {
           property: 'user',
-          // autoFetch: true
         },
         endpoints: {
           login: { url: '/auth/login', method: 'post' },
@@ -82,6 +76,13 @@ export default {
           user: false,
         }
       },
+    }
+  },
+
+  fontawesome: {
+    icons: {
+      solid: true,
+      brands: true,
     }
   },
 

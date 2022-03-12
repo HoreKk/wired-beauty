@@ -4,6 +4,7 @@ module.exports = (app) => {
   
   app.action = {
     authentication: require('./authentication')(app),
-    user: require('./user')(app)
+    user: require('./user')(app),
+    study: require('./study')(app),
   }
 }

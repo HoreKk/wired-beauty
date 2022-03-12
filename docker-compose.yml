@@ -10,19 +10,47 @@ services:
   backend:
     build: ./back
     depends_on:
-      - mongo
+      - mongo1
+      - mongo2
+      - mongo3
     volumes:
       - ./back:/app
       - /app/node_modules
     ports:
       - 4000:4000
-  mongo:
-    container_name: mongo
+
+  mongo1:
+    container_name: mongo1
+    restart: always
     image: mongo
+    links: 
+      - mongo2
+      - mongo3
     ports:
       - 27017:27017
     volumes:
-      - mongodb:/data/db
+      - mongodb1:/data/db
+    entrypoint: [ "/usr/bin/mongod", "--replSet", "rsmongo", "--bind_ip_all"]
+  
+  mongo2:
+    container_name: mongo2
+    restart: always
+    image: mongo
+    ports:
+      - 27020:27017
+    volumes:
+      - mongodb2:/data/db
+    entrypoint: [ "/usr/bin/mongod", "--replSet", "rsmongo", "--bind_ip_all"]
+
+  mongo3:
+    container_name: mongo3
+    restart: always
+    image: mongo
+    ports:
+      - 27021:27017
+    volumes:
+      - mongodb3:/data/db
+    entrypoint: [ "/usr/bin/mongod", "--replSet", "rsmongo", "--bind_ip_all"]
 
   mailhog:
     image: mailhog/mailhog
@@ -33,4 +61,6 @@ services:
       - 8025:8025 # web ui
 
 volumes:
-  mongodb:
+  mongodb1:
+  mongodb2:
+  mongodb3:

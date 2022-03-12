@@ -15,10 +15,12 @@ module.exports = (app) => {
   });
 
   app.use(require('./res')(app));
+
   app.middlewares = {
     bodyParser: require('body-parser'),
     ensureAuthenticated: require('./ensureAuthenticated')(app),
     ensureValidJwt: require('./ensureValidJwt')(app),
-    jwtoken: require('jsonwebtoken')
+    jwtoken: require('jsonwebtoken'),
+    multer: require("multer"),
   };
 };
