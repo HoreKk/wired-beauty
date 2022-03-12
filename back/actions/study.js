@@ -1,5 +1,5 @@
 module.exports = (app) => {
-  const { createStudyService, getStudyById, updateStudyById, fetchAllStudies, uploadDatasetByStudyIdService, fetchDatasetByStudy, removeDatasetById, downloadDatasetById } = app.services.study;
+  const { createStudyService, getStudyById, updateStudyById, fetchAllStudies, uploadDatasetByStudyIdService, fetchDatasetByStudy, removeDatasetById, downloadDatasetById, getDatasetsByIds } = app.services.study;
   return {
     createStudy,
     getStudy,
@@ -8,7 +8,8 @@ module.exports = (app) => {
     uploadDatasetByStudyId,
     getDatasetByStudyId,
     deleteDatasetById,
-    downloadDataset
+    downloadDataset,
+    fetchDatasetsToJson
   }
 
   async function createStudy(req, res) {
@@ -200,6 +201,32 @@ module.exports = (app) => {
             type: "a005",
             message: "Error downloading file",
             display: "error.downloadDataset",
+            err: err.err
+          });
+      });
+    } catch (error) {
+      return res.error({
+        code: "500",
+        type: "a001",
+        message: "Api loading error",
+        display: "error.serverComponents",
+        err: error
+      });
+    }
+  }
+
+  async function fetchDatasetsToJson(req, res) {
+    try {
+      getDatasetsByIds(req.body)
+      .then(async (data) => {
+          return res.success(data);
+        })
+        .catch(async (err) => {
+          return res.error({
+            code: "400",
+            type: "a005",
+            message: "Error loading datasets",
+            display: "error.fetchDatasets",
             err: err.err
           });
       });

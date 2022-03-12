@@ -1,4 +1,5 @@
 module.exports = (app) => {
+  const xlsx = require('node-xlsx');
   const path = require('path');
   const { Study, File } = app.models;
   return {
@@ -9,7 +10,8 @@ module.exports = (app) => {
     uploadDatasetByStudyIdService,
     fetchDatasetByStudy,
     removeDatasetById,
-    downloadDatasetById
+    downloadDatasetById,
+    getDatasetsByIds
   };
 
   // Find Study by id
@@ -148,6 +150,56 @@ module.exports = (app) => {
       const dirPath = path.resolve(__dirname, '../uploads');
       const newPath = path.join(dirPath, file.name);
       return newPath;
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  async function getDatasetsByIds(params) {
+    const XLSX = require('xlsx');
+    try {
+      const files = await File.find({ _id: params.map(f => f._id) });
+      if (!files) return [];
+      let sheets = [];
+      files.map(async (file) => {
+        const dirPath = path.resolve(__dirname, '../uploads');
+        const newPath = path.join(dirPath, file.name);
+        var workbook = XLSX.readFile(newPath);
+        var sheet_name_list = workbook.SheetNames;
+        sheet_name_list.forEach(function(y) {
+          var worksheet = workbook.Sheets[y];
+          var headers = {};
+          var data = [];
+          for(z in worksheet) {
+            if(z[0] === '!') continue;
+            //parse out the column, row, and value
+            var tt = 0;
+            for (var i = 0; i < z.length; i++) {
+              if (!isNaN(z[i])) {
+                tt = i;
+                break;
+              }
+            };
+            var col = z.substring(0,tt);
+            var row = parseInt(z.substring(tt));
+            var value = worksheet[z].v;
+
+            //store header names
+            if(row == 1 && value) {
+              headers[col] = value;
+              continue;
+            }
+
+            if(!data[row]) data[row]={};
+            data[row][headers[col]] = value;
+          }
+          //drop those first two rows which are empty
+          data.shift();
+          data.shift();
+          sheets.push({ name: y, data: data });
+        });
+      });
+      return sheets;
     } catch (e) {
       console.log(e)
     }

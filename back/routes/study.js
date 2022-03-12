@@ -19,7 +19,7 @@ module.exports = (app) => {
   
   var upload = multer({ storage: storage });
 
-  const { createStudy, getStudy, updateStudy, findAllStudies, uploadDatasetByStudyId, getDatasetByStudyId, deleteDatasetById, downloadDataset } = app.action.study;
+  const { createStudy, getStudy, updateStudy, findAllStudies, uploadDatasetByStudyId, getDatasetByStudyId, deleteDatasetById, downloadDataset, fetchDatasetsToJson } = app.action.study;
   
   // Create a new study
   router.post('/create',
@@ -66,6 +66,11 @@ module.exports = (app) => {
   router.post('/:id',
     ensureAuthenticated,
     updateStudy
+  );
+
+  router.post('/report/datasets',
+    ensureAuthenticated,
+    fetchDatasetsToJson
   );
 
   return router;

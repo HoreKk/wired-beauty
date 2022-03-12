@@ -26,7 +26,7 @@ export default {
       navigation: [
         { name: 'Informations', link: '', icon: 'clipboard-check' },
         { name: 'Datasets', link: 'datasets', icon: 'table' },
-        { name: 'Generate Report', link: 'report', icon: 'atom' },
+        { name: 'Data vision', link: 'reports', icon: 'atom' },
       ]
     }
   },
@@ -38,7 +38,11 @@ export default {
 <style scoped>
 
 .nuxt-link-exact-active {
-  @apply bg-transparent;
+  @apply !bg-transparent;
+}
+
+.nuxt-link-active {
+  @apply !bg-transparent;
 }
 
 a.nuxt-link {
